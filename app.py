@@ -1,4 +1,3 @@
-
 import os
 import streamlit as st
 import pandas as pd
@@ -12,6 +11,7 @@ from langchain_core.runnables import RunnablePassthrough
 
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv()
 
 # ---------------- DATABASE ----------------
@@ -20,9 +20,15 @@ DATABASE_PATH = "learning_sql_store.db"
 
 @st.cache_resource
 def init_database():
+    """
+    Initializes and caches the connection to the SQLite database.
+
+    Returns:
+        SQLDatabase: A LangChain SQLDatabase object connected to the local store.
+    """
     db_uri = f"sqlite:///{DATABASE_PATH}"
 
-    # Disable sample rows to avoid date parsing errors
+    # Disable sample rows to avoid date parsing errors during schema inspection
     return SQLDatabase.from_uri(
         db_uri,
         sample_rows_in_table_info=0
@@ -33,7 +39,16 @@ db = init_database()
 # ---------------- SQL GENERATION ----------------
 
 def get_sql_chain(db):
+    """
+    Creates a LangChain runnable chain that transforms a natural language 
+    question into a valid SQL query based on the database schema.
 
+    Args:
+        db (SQLDatabase): The active database connection to extract schema from.
+
+    Returns:
+        Chain: A LangChain executable pipeline (LCEL) that outputs a SQL string.
+    """
     template = """
 You are a data analyst helping a user explore a company database.
 
@@ -86,7 +101,20 @@ SQL Query:
 # ---------------- RESPONSE ----------------
 
 def get_response(user_query: str, db: SQLDatabase):
+    """
+    Orchestrates the full RAG (Retrieval-Augmented Generation) pipeline:
+    1. Generates SQL from text.
+    2. Generates a natural language explanation of the SQL.
+    3. Executes the query against the database.
+    4. Generates a final conversational answer based on the results.
 
+    Args:
+        user_query (str): The question asked by the user in the chat interface.
+        db (SQLDatabase): The database instance to query against.
+
+    Returns:
+        dict: A dictionary containing 'query', 'explanation', 'answer', and 'data' (DataFrame).
+    """
     # 1️⃣ Generate SQL
     sql_chain = get_sql_chain(db)
     query = sql_chain.invoke({"question": user_query}).strip()
@@ -99,9 +127,7 @@ Explain clearly and simply what the following SQL query does:
 """)
 
     explain_llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
-
     explain_chain = explain_prompt | explain_llm | StrOutputParser()
-
     explanation = explain_chain.invoke({"query": query})
 
     # 3️⃣ Execute SQL safely
@@ -131,7 +157,6 @@ SQL Response: {response}
     schema_text = db.get_table_info()[:4000]
 
     final_llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
-
     final_chain = nl_prompt | final_llm | StrOutputParser()
 
     final_answer = final_chain.invoke({
@@ -151,7 +176,6 @@ SQL Response: {response}
 # ---------------- STREAMLIT UI ----------------
 
 if "chat_history" not in st.session_state:
-
     st.session_state.chat_history = [
         AIMessage(content=(
             "Hello! I'm your SQL assistant 👋\n\n"
@@ -164,22 +188,19 @@ if "chat_history" not in st.session_state:
         ))
     ]
 
+# UI Setup
 st.image("p.jpg", width=100)
-
 st.title("Learn SQL by Asking Questions")
-
 st.write(
-"Ask a question and the assistant will generate the SQL query, "
-"explain it, run it on the database, and show the result."
+    "Ask a question and the assistant will generate the SQL query, "
+    "explain it, run it on the database, and show the result."
 )
 
 with st.expander("About the database"):
-
     st.markdown("""
 This app uses a small **online store database**.
 
 Tables:
-
 - **customers** – customer information  
 - **products** – product catalog and prices  
 - **orders** – orders placed by customers  
@@ -189,14 +210,10 @@ Tables:
 # ---------------- CHAT DISPLAY ----------------
 
 for message in st.session_state.chat_history:
-
     if isinstance(message, AIMessage):
-
         with st.chat_message("AI", avatar="assistance.png"):
             st.markdown(message.content)
-
     elif isinstance(message, HumanMessage):
-
         with st.chat_message("Human", avatar="laptop.png"):
             st.markdown(message.content)
 
@@ -205,18 +222,13 @@ for message in st.session_state.chat_history:
 user_query = st.chat_input("Ask a question about the database...")
 
 if user_query and user_query.strip():
-
-    st.session_state.chat_history.append(
-        HumanMessage(content=user_query)
-    )
+    st.session_state.chat_history.append(HumanMessage(content=user_query))
 
     with st.chat_message("Human", avatar="laptop.png"):
         st.markdown(user_query)
 
     with st.chat_message("AI", avatar="assistance.png"):
-
         with st.spinner("Thinking..."):
-
             outputs = get_response(user_query, db)
 
         st.markdown("### Generated SQL Query")
@@ -231,6 +243,4 @@ if user_query and user_query.strip():
         st.markdown("### Final Answer")
         st.success(outputs["answer"])
 
-        st.session_state.chat_history.append(
-            AIMessage(content=outputs["answer"])
-        )
+        st.session_state.chat_history.append(AIMessage(content=outputs["answer"]))
