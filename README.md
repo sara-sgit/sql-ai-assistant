@@ -1,7 +1,7 @@
 # 🧠 SQL Learning Assistant
 
 An AI-powered chatbot that turns your plain English questions into SQL queries,
-explains them, runs them, and shows the results  learn SQL by doing, not just reading.
+explains them, runs them, and shows the results learn SQL by doing, not just reading.
 
 ---
 
@@ -32,7 +32,7 @@ You don't just get an answer you understand how to get it yourself next time.
 
 ## ✨ Features
 
-- Ask questions in plain English — no SQL knowledge needed to start
+- Ask questions in plain English : no SQL knowledge needed to start
 - Automatically generates the SQL query for your question
 - Explains the query in simple beginner-friendly language
 - Runs the query against a real database and displays the results
