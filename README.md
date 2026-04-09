@@ -86,6 +86,12 @@ cp .env.example .env
 streamlit run app.py
 ```
 
+## 🌐 Live Demo
+
+👉 [Try it here](https://sql-ai-assistant-x264er7xegdp7f8gztu7cf.streamlit.app/)
+
+---
+
 
 
 
