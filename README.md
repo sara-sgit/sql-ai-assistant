@@ -1,27 +1,67 @@
 # 🧠 SQL Learning Assistant
 
-An AI-powered assistant that turns your plain English questions into SQL 
-queries and explains them so you actually learn. [ Learn by doing]
+An AI-powered chatbot that turns your plain English questions into SQL queries,
+explains them, runs them, and shows the results  learn SQL by doing, not just reading.
 
 ---
 
 ## 💡 Why this project?
 
-Writing SQL from scratch is intimidating for beginners. This tool lets you
-ask questions in plain English, automatically generates the correct SQL query,
-runs it against a real database, and explains what each part of the query does.
+Most people learn SQL by watching videos or reading documentation.
+This tool takes a different approach you ask a question in plain English, and the assistant:
+
+1. Generates the correct SQL query
+2. Explains what the query does in simple terms
+3. Runs it on a real database and shows the results
+4. Gives you a plain English answer
 
 You don't just get an answer you understand how to get it yourself next time.
 
 ---
 
+## 🛠️ Tech Stack
+
+- **Python** — core language
+- **Streamlit** — user interface
+- **LangChain** — LLM chaining and prompt management
+- **Groq API (LLaMA 3.1)** — SQL generation and explanation
+- **SQLite** — sample online store database
+- **Pandas** — query result handling
+
+---
+
 ## ✨ Features
 
-- Ask questions in plain English (no SQL knowledge needed to start)
+- Ask questions in plain English — no SQL knowledge needed to start
 - Automatically generates the SQL query for your question
-- Runs the query against a real SQLite sample database
 - Explains the query in simple beginner-friendly language
-- Helps you learn SQL gradually through real examples
+- Runs the query against a real database and displays the results
+- Gives a short natural language answer to your question
+- Chat history kept throughout the session
+
+---
+
+## 🗄️ About the Database
+
+This app uses a small **online store database** with 4 tables:
+
+- **customers** — customer information
+- **products** — product catalog and prices
+- **orders** — orders placed by customers
+- **order_items** — products inside each order
+
+Example questions you can ask:
+- Which customers placed the most orders?
+- What are the most expensive products?
+- How many orders were placed per country?
+
+---
+
+## 🏗️ Architecture
+
+![Architecture Diagram](assets/diagram.png)
+
+---
 
 ## 🚀 How to Run Locally
 
