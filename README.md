@@ -11,7 +11,7 @@ Writing SQL from scratch is intimidating for beginners. This tool lets you
 ask questions in plain English, automatically generates the correct SQL query,
 runs it against a real database, and explains what each part of the query does.
 
-You don't just get an answer — you understand how to get it yourself next time.
+You don't just get an answer you understand how to get it yourself next time.
 
 ---
 
