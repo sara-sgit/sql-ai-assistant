@@ -26,18 +26,25 @@ You don't just get an answer you understand how to get it yourself next time.
 ## 🚀 How to Run Locally
 
 1. Clone the repository
-   git clone https://github.com/sara-sgit/sql-ai-assistant
-   cd sql-ai-assistant
+```bash
+git clone https://github.com/sara-sgit/sql-ai-assistant
+cd sql-ai-assistant
+```
 
 2. Install dependencies
-   pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
+```
 
 3. Set up your environment variables
-   Copy .env.example to .env and add your Groq API key
-   GROQ_API_KEY=your-groq-api-key-here
+```bash
+cp .env.example .env
+```
 
 4. Run the app
-   streamlit run app.py
+```bash
+streamlit run app.py
+```
 
 
 
