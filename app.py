@@ -115,11 +115,11 @@ def get_response(user_query: str, db: SQLDatabase):
     Returns:
         dict: A dictionary containing 'query', 'explanation', 'answer', and 'data' (DataFrame).
     """
-    # 1️⃣ Generate SQL
+    # Generate SQL
     sql_chain = get_sql_chain(db)
     query = sql_chain.invoke({"question": user_query}).strip()
 
-    # 2️⃣ Explain SQL
+    # Explain SQL
     explain_prompt = ChatPromptTemplate.from_template("""
 Explain clearly and simply what the following SQL query does:
 
@@ -130,7 +130,7 @@ Explain clearly and simply what the following SQL query does:
     explain_chain = explain_prompt | explain_llm | StrOutputParser()
     explanation = explain_chain.invoke({"query": query})
 
-    # 3️⃣ Execute SQL safely
+    # Execute SQL safely
     try:
         engine = db._engine
         df = pd.read_sql(query, engine)
@@ -140,7 +140,7 @@ Explain clearly and simply what the following SQL query does:
         raw_result = str(e)
         df = pd.DataFrame({"error": [str(e)]})
 
-    # 4️⃣ Generate final natural language answer
+    # Generate final natural language answer
     nl_prompt = ChatPromptTemplate.from_template("""
 You are a helpful SQL assistant.
 
