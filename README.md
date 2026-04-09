@@ -59,7 +59,7 @@ Example questions you can ask:
 
 ## 🏗️ Architecture
 
-![Architecture Diagram](assets/diagram.png)
+![Architecture Diagram](https://raw.githubusercontent.com/sara-sgit/sql-ai-assistant/refs/heads/main/diagram.png)
 
 ---
 
